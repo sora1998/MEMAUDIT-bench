@@ -1,0 +1,56 @@
+cff-version: 1.2.0
+message: "If you use MEMAUDIT, please cite the accompanying paper below."
+type: software
+title: "MEMAUDIT: Auditing Long-Term Agent Memory via Hidden User-State Recovery"
+repository-code: "https://github.com/sora1998/MEMAUDIT-bench"
+url: "https://github.com/sora1998/MEMAUDIT-bench"
+license: CC-BY-4.0
+authors:
+  - family-names: Ma
+    given-names: Enze
+  - family-names: Zhou
+    given-names: Yufan
+  - family-names: Huang
+    given-names: Wei-Chieh
+  - family-names: Yang
+    given-names: Jie
+  - family-names: Ma
+    given-names: Huanhuan
+  - family-names: Wang
+    given-names: Zixuan
+  - family-names: Li
+    given-names: Chengze
+  - family-names: Miao
+    given-names: Chunyu
+  - family-names: Yu
+    given-names: "Philip S."
+  - family-names: Wang
+    given-names: Zhen
+preferred-citation:
+  type: article
+  title: "MEMPROBE: Probing Long-Term Agent Memory via Hidden User-State Recovery"
+  authors:
+    - family-names: Ma
+      given-names: Enze
+    - family-names: Zhou
+      given-names: Yufan
+    - family-names: Huang
+      given-names: Wei-Chieh
+    - family-names: Yang
+      given-names: Jie
+    - family-names: Ma
+      given-names: Huanhuan
+    - family-names: Wang
+      given-names: Zixuan
+    - family-names: Li
+      given-names: Chengze
+    - family-names: Miao
+      given-names: Chunyu
+    - family-names: Yu
+      given-names: "Philip S."
+    - family-names: Wang
+      given-names: Zhen
+  year: 2026
+  journal: arXiv
+  doi: "10.48550/arXiv.2606.24595"
+  url: "https://arxiv.org/abs/2606.24595"

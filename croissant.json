@@ -51,7 +51,7 @@
   "@type": "sc:Dataset",
   "name": "MEMAUDIT",
   "alternateName": "MEMAUDIT 50-user pooled-final release artifact",
-  "description": "MEMAUDIT (formerly MemProbe) is a 50-user release artifact for evaluating long-term agent memory through post-interaction structured user-state recovery. It contains hidden synthetic user memory banks, leak-controlled task prompts, full interaction transcripts, final memory stores, reconstruction judgments, preference judgments, attribution outputs, and analysis/reproduction code for comparing memory-equipped LLM agents. Run identifiers in this artifact follow the form <system>_pooled_50 (dump_all access mode) or <system>_pooled_50_retrieve (top-k retrieve access mode); the system token 'memt_memonly' corresponds to the paper-table label 'memt' (Mem-T variant with use_finish_answer=False, returning only retrieved memories rather than the LLM-authored finish answer).",
+  "description": "MEMAUDIT is a 50-user release artifact for evaluating long-term agent memory through post-interaction structured user-state recovery. It contains hidden synthetic user memory banks, leak-controlled task prompts, full interaction transcripts, final memory stores, reconstruction judgments, preference judgments, attribution outputs, and analysis/reproduction code for comparing memory-equipped LLM agents. Run identifiers in this artifact follow the form <system>_pooled_50 (dump_all access mode) or <system>_pooled_50_retrieve (top-k retrieve access mode); the system token 'memt_memonly' corresponds to the paper-table label 'memt' (Mem-T variant with use_finish_answer=False, returning only retrieved memories rather than the LLM-authored finish answer).",
   "conformsTo": "http://mlcommons.org/croissant/1.1",
   "url": "https://github.com/sora1998/MEMAUDIT-bench",
   "version": "0.1.0-pooled-final-50-user",
@@ -59,14 +59,46 @@
   "datePublished": "2026-05-03",
   "creator": [
     {
-      "@type": "Organization",
-      "name": "Anonymous Authors"
+      "@type": "Person",
+      "name": "Enze Ma"
+    },
+    {
+      "@type": "Person",
+      "name": "Yufan Zhou"
+    },
+    {
+      "@type": "Person",
+      "name": "Wei-Chieh Huang"
+    },
+    {
+      "@type": "Person",
+      "name": "Jie Yang"
+    },
+    {
+      "@type": "Person",
+      "name": "Huanhuan Ma"
+    },
+    {
+      "@type": "Person",
+      "name": "Zixuan Wang"
+    },
+    {
+      "@type": "Person",
+      "name": "Chengze Li"
+    },
+    {
+      "@type": "Person",
+      "name": "Chunyu Miao"
+    },
+    {
+      "@type": "Person",
+      "name": "Philip S. Yu"
+    },
+    {
+      "@type": "Person",
+      "name": "Zhen Wang"
     }
   ],
-  "publisher": {
-    "@type": "Organization",
-    "name": "Anonymous Authors"
-  },
   "keywords": [
     "long-term memory",
     "agent memory",
@@ -93,8 +125,8 @@
       "description": "Release description, environment instructions, usage examples, and license/third-party-assets notes.",
       "contentUrl": "https://raw.githubusercontent.com/sora1998/MEMAUDIT-bench/main/README.md",
       "encodingFormat": "text/markdown",
-      "contentSize": "11188 B",
-      "sha256": "c0bf44037a87942126d54aeffbc1dba2d610665d33e86378f98f510b654a9c85"
+      "contentSize": "8424 B",
+      "sha256": "1e477fe5a214fcd67eca65f946dc3ee849ef0658306f5b44e5c38e95a826f636"
     },
     {
       "@type": "cr:FileObject",
@@ -148,7 +180,7 @@
       "@type": "cr:FileSet",
       "@id": "history_files",
       "name": "Interaction transcripts",
-      "description": "Full episode transcripts for the released 50-user runs, organized as history/<run_id>/<user_id>/episode_<n>.json. <run_id> encodes both memory system and access mode (suffix '_retrieve' indicates retrieve mode; absence indicates dump_all).",
+      "description": "Full episode transcripts for the five released 50-user interaction runs, organized as history/<base_run_id>/<user_id>/episode_<n>.json. Full-store and retrieval scoring reuse each base run trajectory; the _retrieve suffix is used only for reconstruction outputs under output/.",
       "includes": "history/*_pooled_50*/user_*/episode_*.json",
       "encodingFormat": "application/json"
     },

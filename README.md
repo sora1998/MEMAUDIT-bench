@@ -1,19 +1,125 @@
-# MEMAUDIT
+<h1 align="center">MEMAUDIT</h1>
+<h3 align="center">What do agents remember about their users?</h3>
+<p align="center">Auditing long-term agent memory through hidden user-state recovery.</p>
 
-Release artifact package for **MEMAUDIT** (formerly **MemProbe**), a benchmark for auditing long-term agent memory via hidden user-state recovery. The benchmark asks: after an assistant interacts with a simulated user across ordinary assistance tasks, what hidden user state can be reconstructed from the memory artifact the assistant leaves behind? This repository contains the 50-user release artifacts and the code needed to
-inspect, score, and rerun the benchmark.
+<p align="center">
+  <a href="https://arxiv.org/abs/2606.24595"><img src="https://img.shields.io/badge/arXiv-2606.24595-b31b1b.svg" alt="Paper: arXiv 2606.24595"></a>
+  <a href="docs/data.md"><img src="https://img.shields.io/badge/Benchmark-50_synthetic_users-00629B.svg" alt="Benchmark: 50 synthetic users"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-CC_BY_4.0-182B49.svg" alt="License: CC BY 4.0"></a>
+</p>
 
-## Paper
+<p align="center">
+  <b><a href="https://arxiv.org/abs/2606.24595">Paper</a> · <a href="docs/results.md">Results</a> · <a href="docs/data.md">Data</a> · <a href="docs/reproduction.md">Reproduction</a> · <a href="#citation">Citation</a></b>
+</p>
 
-The accompanying paper was released under the original name **MEMPROBE**.
+<p align="center">
+  Enze Ma · Yufan Zhou · Wei-Chieh Huang · Jie Yang · Huanhuan Ma<br>
+  Zixuan Wang · Chengze Li · Chunyu Miao · Philip S. Yu · Zhen Wang
+</p>
 
-**MEMPROBE: Probing Long-Term Agent Memory via Hidden User-State Recovery**
+## Overview
 
-Paper: https://arxiv.org/abs/2606.24595
+**Completing a task does not tell us what an agent remembers.** MEMAUDIT evaluates the memory left behind after an agent assists a user across a sequence of everyday tasks. We reconstruct the user's hidden attributes from that memory and compare them with synthetic ground truth.
+
+The benchmark separates two questions: **what information is stored**, and **what information can be retrieved**. It evaluates both full-store access and top-5 retrieval, alongside task completion and preference alignment.
+
+<p align="center">
+  <img src="docs/assets/overview.svg" alt="MEMAUDIT pipeline: hidden synthetic user state guides the simulator; an agent assists the user across tasks and builds memory; an evaluator recovers user attributes through full-store access or top-5 retrieval and compares them with ground truth." width="100%">
+</p>
+
+| Users | Hidden state | Assistance tasks | Compared systems | Memory access |
+| :--: | :--: | :--: | :--: | :--: |
+| 50 synthetic users | 31 dimensions per user | 1,550 per system | 5 | Full store / top-5 |
+
+The five hidden-state categories are **skills, knowledge, episodes, self-model, and assistance preferences**. Hidden banks guide the simulator and evaluator; they are not supplied directly to the assistant. See [data and evaluation protocol](docs/data.md).
+
+## Released results
+
+Task completion nearly saturates even without memory, while memory recovery remains limited. For A-Mem, long context, and Mem0, recovery drops further when the evaluator relies on retrieval.
+
+<!-- BEGIN GENERATED RELEASE TABLE -->
+
+| System | Users | Task completion (%) | Full-store recovery | Top-5 recovery |
+| :-- | --: | --: | --: | --: |
+| No memory | 50 | 99.935 | [0.000 ± 0.000](output/nomem_pooled_50/nomem_20260501_030243_merged.json) | — |
+| A-Mem | 50 | 99.935 | [0.611 ± 0.062](output/amem_pooled_50/amem_20260501_030245_merged.json) | [0.540 ± 0.062](output/amem_pooled_50_retrieve/amem_20260501_030245_merged.json) |
+| Long context | 50 | 99.935 | [0.624 ± 0.067](output/longctx_full_pooled_50/longctx_full_20260501_030246_merged.json) | [0.503 ± 0.075](output/longctx_full_pooled_50_retrieve/longctx_full_20260501_030246_merged.json) |
+| Mem0 | 50 | 99.871 | [0.613 ± 0.060](output/mem0_pooled_50/mem0_20260501_030248_merged.json) | [0.473 ± 0.079](output/mem0_pooled_50_retrieve/mem0_20260501_030248_merged.json) |
+| Mem-T (memory-only) | 50 | 99.935 | [0.131 ± 0.251](output/memt_memonly_pooled_50/memt_memonly_20260502_002256_merged.json) † | [0.465 ± 0.057](output/memt_memonly_pooled_50_retrieve/memt_memonly_20260502_002256_merged.json) |
+
+Recovery is category-balanced on a 0–1 scale; ± is the sample standard deviation across users.
+Each linked recovery score points to its archived JSON report. These are release results, not new experiments.
+
+† Mem-T full-store recovery is a context-overflow diagnostic and is not directly comparable to the context-fit full-store results.
+The no-memory release has no retrieve-mode report; — means not reported.
+
+<!-- END GENERATED RELEASE TABLE -->
+
+See [metric definitions, report selection, and comparison notes](docs/results.md). All values can be regenerated from the included artifacts with the offline command below.
+
+## Quick start
+
+### 1. Inspect the release — no API key required
+
+Clone the repository and summarize the archived results with Python 3.10 or later. This step uses only the Python standard library.
+
+```bash
+git clone https://github.com/sora1998/MEMAUDIT-bench.git
+cd MEMAUDIT-bench
+python scripts/summarize_results.py
+```
+
+The script checks the nine final reports against their per-user records before printing the table. To follow one user through the benchmark:
+
+| Stage | Example artifact |
+| :-- | :-- |
+| Hidden user state | [50-user bank](Deeppersona/data/user_memory_banks_pooled_final.json) |
+| Assistance tasks | [user_001 tasks](benchmark_data/CustomTasksPooledFinal/user_001.json) |
+| Interaction | [A-Mem, episode 1](history/amem_pooled_50/user_001/episode_1.json) |
+| Final memory | [A-Mem memory store](memory/amem_pooled_50/user_001/memories.json) |
+| Recovery judgment | [Predictions and scores](output/amem_pooled_50/recon_judge/user_001.json) |
+| Failure analysis | [Attribution records](output/amem_pooled_50/attribution/user_001.json) |
+
+### 2. Run one user
+
+To generate a new trajectory, first follow the [environment setup](docs/reproduction.md#2-install-the-rerun-environment) and set `OPENAI_API_KEY`. This calls the configured models and incurs API costs. The no-memory example runs all 31 tasks for one user and does not need a local GPU.
+
+```bash
+python runner.py \
+  --tasks-dir CustomTasksPooledFinal \
+  --agent nomem \
+  --run-id smoke_nomem_pooled_50 \
+  --users user_001 \
+  --scoring-modes dump_all
+```
+
+For the five-system, 50-user evaluation, Mem-T setup, attribution, and task generation, use the [reproduction guide](docs/reproduction.md). New runs should use new run IDs to preserve the released artifacts.
+
+## Repository guide
+
+```text
+MEMAUDIT-bench/
+├── runner.py                  # Run assistance trajectories and evaluation
+├── simulation.py              # User simulator and agent registry
+├── scorer.py                  # Memory recovery and auxiliary metrics
+├── failure_attribution.py     # Analyze low-recovery cases
+├── agents/                    # Adapters for the compared memory systems
+├── benchmark_data/            # Released assistance tasks
+├── Deeppersona/data/           # Synthetic user banks and dimension pool
+├── history/                   # Interaction transcripts
+├── memory/                    # Final per-user memory stores
+├── pref_judge/                # Preference evaluations
+├── output/                    # Recovery judgments and aggregate reports
+├── scripts/summarize_results.py
+├── docs/                      # Protocol, reproduction, and result details
+└── croissant.json             # Machine-readable dataset metadata
+```
+
+[A-Mem](A-mem-sys/) and [Mem-T](Mem-T/) implementations are included with their upstream licenses. The released Mem-T baseline uses `memt_memonly`: Mem-T memory operations with a shared assistant backbone for the final reply.
 
 ## Citation
 
-If you find this benchmark or code useful, please cite:
+Please cite the accompanying [paper](https://arxiv.org/abs/2606.24595). Its original arXiv title is retained in the citation:
 
 ```bibtex
 @misc{ma2026memprobeprobinglongtermagent,
@@ -27,333 +133,10 @@ If you find this benchmark or code useful, please cite:
 }
 ```
 
-## What Is Included
+Citation metadata is also available in [CITATION.cff](CITATION.cff).
 
-The release keeps the 50-user pooled-final benchmark used by the paper.
+## License and acknowledgments
 
-Core code:
+MEMAUDIT's top-level code and generated benchmark artifacts are released under [CC BY 4.0](LICENSE). The benchmark builds on DeepPersona, O*NET, and the compared memory systems. Vendored A-Mem code retains its [MIT license](A-mem-sys/LICENSE); Mem-T retains its [Apache 2.0 license](Mem-T/LICENSE). Model weights are not included.
 
-- `runner.py`: benchmark episode runner.
-- `simulation.py`: user simulator, task loop, agent registry.
-- `scorer.py`: task-fit, reconstruction, preference, turn, and footprint scoring.
-- `failure_attribution.py`: attribution pipeline for low-recovery cases.
-- `llm_client.py`: OpenAI API wrapper and JSON parsing.
-- `agents/`: memory-system wrappers for the five compared systems —
-  `nomem`, `longctx_full`, `amem`, `mem0`, and `memt`. The released runs
-  use the `memt_memonly` variant (Mem-T memory operations + shared
-  OpenAI backbone for the final reply); this is what the paper tables
-  label `memt`.
-
-Memory-system code:
-
-- `A-mem-sys/`: A-Mem implementation used by the `amem` agent.
-- `Mem-T/`: Mem-T implementation used by the `memt` agent (and its
-  `memt_memonly` variant).
-- `Deeppersona/`: persona and hidden-bank generation utilities.
-
-Released benchmark data:
-
-- `Deeppersona/data/user_memory_banks_pooled_final.json`: 50 hidden user banks.
-  This is the only user-memory bank shipped and is the default `--bank` for
-  `runner.py` / `task_generator.py`, so the `--bank` flag is optional.
-- `benchmark_data/CustomTasksPooledFinal/user_*.json`: 50 task files, one per user.
-
-Released run artifacts:
-
-- `history/<run_id>/user_*/episode_*.json`: full interaction transcripts.
-- `memory/<run_id>/user_*/memories.json`: final memory dump per user.
-- `pref_judge/<run_id>/user_*/episode_*.json`: preference-judge records.
-- `output/<run_id>/recon_judge/user_*.json`: per-dimension reconstruction outputs.
-- `output/<run_id>/attribution/user_*.json`: failure-attribution outputs.
-- `output/_task_design_oracle/user_*.json`: cached task-design oracle outputs.
-- `output/<run_id>/*.json`: aggregate reports.
-
-Released run IDs:
-
-- `nomem_pooled_50`
-- `amem_pooled_50`
-- `amem_pooled_50_retrieve`
-- `longctx_full_pooled_50`
-- `longctx_full_pooled_50_retrieve`
-- `mem0_pooled_50`
-- `mem0_pooled_50_retrieve`
-- `memt_memonly_pooled_50`
-- `memt_memonly_pooled_50_retrieve`
-
-## Environment Requirements
-
-- Linux, Python 3.10
-- OpenAI API access (simulator, assistant, slot-fill, judge, attribution)
-- CUDA-capable GPU only if rerunning Mem-T
-
-`requirements.txt` is a full `pip freeze` snapshot covering benchmark, Mem0,
-A-Mem, vector-store, and Mem-T/vLLM dependencies. `environment.yml` is exported
-from the same environment with the machine-local `prefix` line removed.
-
-## Install Environment
-
-```bash
-conda create -n memaudit python=3.10
-conda activate memaudit
-python -m pip install --upgrade pip setuptools wheel
-python -m pip install -r requirements.txt
-```
-
-Alternatively: `conda env create -f environment.yml`.
-
-The vendored `A-mem-sys/` and `Mem-T/` folders need no editable install; the
-wrappers add them to `sys.path` at runtime.
-
-```bash
-export OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
-```
-
-`OPENAI_API_KEY` is read from the environment; no key is hard-coded. The
-default OpenAI model is set as `GPT_MODEL` in `llm_client.py`; edit it there to
-switch models or endpoints.
-
-## Mem-T Runtime Requirements
-
-Mem-T is not required to inspect the released artifacts. It is required only if
-you want to rerun `--agent memt` or `--agent memt_memonly`.
-
-The Python packages needed for Mem-T are already in `requirements.txt`. The
-extra runtime requirement is the local Mem-T-4B model server.
-
-Download the Mem-T model checkpoint:
-
-- HuggingFace model: `EdwinYue/Mem-T-4B`
-
-Serve it with an OpenAI-compatible vLLM endpoint. Example:
-
-```bash
-export VLLM_ALLOW_LONG_MAX_MODEL_LEN=1
-python -m vllm.entrypoints.openai.api_server \
-  --model /path/to/Mem-T-4B \
-  --served-model-name Mem-T-4B \
-  --host 127.0.0.1 \
-  --port 8765
-```
-
-Then point the benchmark wrapper at that server:
-
-```bash
-export MEMT_BASE_URL=http://127.0.0.1:8765/v1
-export MEMT_MODEL_ID=Mem-T-4B
-export OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
-```
-
-`OPENAI_API_KEY` is still needed for the shared assistant backbone and judge
-calls. The local Mem-T policy itself is served by vLLM.
-
-## Inspect Released Artifacts
-
-The released JSON files can be inspected without making API calls.
-
-Useful paths:
-
-```text
-Deeppersona/data/user_memory_banks_pooled_final.json
-benchmark_data/CustomTasksPooledFinal/user_001.json
-history/amem_pooled_50/user_001/episode_1.json
-memory/amem_pooled_50/user_001/memories.json
-output/amem_pooled_50/recon_judge/user_001.json
-output/amem_pooled_50/attribution/user_001.json
-```
-
-Each `recon_judge/user_*.json` stores the per-dimension slot-fill prediction,
-judge score, judge rationale, and, for retrieve-mode runs, the actual top-k
-retrieved memories shown to the slot filler.
-
-Each `attribution/user_*.json` stores the staged attribution label:
-
-- `ok`
-- `memory_failure`
-- `task_design_failure`
-- `agent_elicitation_failure`
-- `simulator_too_strict`
-- `no_targeted_task`
-
-## Run A Small Smoke Test
-
-This command runs one user with no memory and dump-all scoring:
-
-```bash
-python runner.py \
-  --tasks-dir CustomTasksPooledFinal \
-  --bank Deeppersona/data/user_memory_banks_pooled_final.json \
-  --agent nomem \
-  --run-id smoke_nomem \
-  --users user_001 \
-  --scoring-modes dump_all
-```
-
-It writes:
-
-- `history/smoke_nomem/`
-- `memory/smoke_nomem/`
-- `pref_judge/smoke_nomem/`
-- `output/smoke_nomem/`
-- `usage/smoke_nomem_*.txt`
-
-`usage/` is ignored by Git.
-
-## Rerun The 50-User Benchmark
-
-Define the released 50 users:
-
-```bash
-USERS=$(printf "user_%03d " $(seq 1 50))
-```
-
-No-memory baseline:
-
-```bash
-python runner.py \
-  --tasks-dir CustomTasksPooledFinal \
-  --bank Deeppersona/data/user_memory_banks_pooled_final.json \
-  --agent nomem \
-  --run-id nomem_pooled_50_rerun \
-  --users $USERS \
-  --scoring-modes dump_all
-```
-
-A-Mem:
-
-```bash
-python runner.py \
-  --tasks-dir CustomTasksPooledFinal \
-  --bank Deeppersona/data/user_memory_banks_pooled_final.json \
-  --agent amem \
-  --run-id amem_pooled_50_rerun \
-  --users $USERS \
-  --scoring-modes dump_all retrieve
-```
-
-Raw long-context memory:
-
-```bash
-python runner.py \
-  --tasks-dir CustomTasksPooledFinal \
-  --bank Deeppersona/data/user_memory_banks_pooled_final.json \
-  --agent longctx_full \
-  --run-id longctx_full_pooled_50_rerun \
-  --users $USERS \
-  --scoring-modes dump_all retrieve
-```
-
-Mem0:
-
-```bash
-python runner.py \
-  --tasks-dir CustomTasksPooledFinal \
-  --bank Deeppersona/data/user_memory_banks_pooled_final.json \
-  --agent mem0 \
-  --run-id mem0_pooled_50_rerun \
-  --users $USERS \
-  --scoring-modes dump_all retrieve
-```
-
-Mem-T memory-only wrapper:
-
-```bash
-python runner.py \
-  --tasks-dir CustomTasksPooledFinal \
-  --bank Deeppersona/data/user_memory_banks_pooled_final.json \
-  --agent memt_memonly \
-  --run-id memt_memonly_pooled_50_rerun \
-  --users $USERS \
-  --scoring-modes dump_all retrieve
-```
-
-`memt_memonly` uses the Mem-T memory formation/update/retrieval mechanism, but
-uses the shared OpenAI backbone for the final assistant reply. It requires the
-Mem-T vLLM server described above.
-
-## Rerun Failure Attribution
-
-Attribution consumes `output/<run_id>/recon_judge/`, `history/<run_id>/`, and
-the released tasks. It makes LLM judge calls.
-
-One run:
-
-```bash
-python failure_attribution.py --run mem0_pooled_50
-```
-
-One user:
-
-```bash
-python failure_attribution.py --run mem0_pooled_50 --user user_001
-```
-
-All runs with reconstruction outputs:
-
-```bash
-python failure_attribution.py --all
-```
-
-Outputs are written to:
-
-```text
-output/<run_id>/attribution/user_*.json
-```
-
-The shared task-design oracle cache is written to:
-
-```text
-output/_task_design_oracle/user_*.json
-```
-
-## Regenerate Tasks
-
-The release already includes the accepted task pool. To regenerate tasks for a
-user, use:
-
-```bash
-python task_generator.py user_001 \
-  --bank Deeppersona/data/user_memory_banks_pooled_final.json \
-  --output-dir benchmark_data/CustomTasksPooledFinal_rerun
-```
-
-This makes LLM calls and may not reproduce the exact released task text unless
-you also reproduce the original model, sampling settings, and retry path.
-
-## Notes On Cost And Determinism
-
-- Simulator, assistant reply, slot-fill, judge, and attribution steps call the
-  OpenAI API by default.
-- Judge-style calls run at temperature `0.0` in code.
-- Task generation and user simulation are not guaranteed bitwise deterministic
-  across API/model versions.
-- The release contains the actual transcripts, memory dumps, recovered slots,
-  judge rationales, and attribution labels so that paper claims can be audited
-  without rerunning the expensive interaction loop.
-
-## Licenses And Third-Party Assets
-
-The benchmark uses cited external resources and systems, including DeepPersona,
-O*NET, existing memory-system papers or implementations, and API-based LLM
-services. The released package does not redistribute third-party model weights
-or proprietary service outputs beyond benchmark artifacts generated for this
-study.
-
-License and terms-of-use notes:
-
-- Top-level MEMAUDIT code and generated benchmark artifacts are released
-  under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); see the
-  top-level `LICENSE` file. This README does not override any third-party
-  license or service term.
-- `A-mem-sys/` is included with its upstream MIT License at
-  `A-mem-sys/LICENSE`.
-- `Mem-T/` is included with its upstream Apache License 2.0 at `Mem-T/LICENSE`.
-- Mem-T-4B model weights are not included. Users who rerun Mem-T should obtain
-  the model from its upstream distribution point and follow the corresponding
-  model-card license and terms.
-- DeepPersona, O*NET, Mem0, OpenAI/API services, Hugging Face model hosting,
-  and other referenced external resources remain governed by their own
-  licenses, model cards, acceptable-use policies, and terms of service.
-- The released JSON artifacts are synthetic benchmark artifacts produced for
-  this study to support audit and reproducibility. They do not grant additional
-  rights to upstream datasets, taxonomies, model weights, or API services beyond
-  those upstream terms.
+See [data provenance, limitations, and third-party terms](docs/data.md#provenance-and-licenses) for details.

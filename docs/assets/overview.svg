@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">MEMAUDIT benchmark overview</title>
+  <desc id="desc">A hidden bank of synthetic user attributes guides a user simulator. An agent assists the simulator across 31 tasks and retains memory. An evaluator reconstructs user attributes using either the full store or top-5 retrieval and compares them with the hidden bank. The assistant never receives the hidden bank directly.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0L8 4L0 8" fill="none" stroke="#00629b" stroke-width="1.8"/></marker>
+    <marker id="muted-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0L8 4L0 8" fill="none" stroke="#57768f" stroke-width="1.8"/></marker>
+  </defs>
+  <rect width="1200" height="620" rx="22" fill="#f3f7fb"/>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="40" y="47" font-size="17" font-weight="700" letter-spacing="2.5" fill="#00629b">MEMAUDIT</text>
+    <text x="40" y="89" font-size="31" font-weight="700" fill="#182b49">From useful assistance to recoverable memory.</text>
+    <text x="40" y="119" font-size="18" fill="#50677e">Audit what the agent retains after the conversation ends.</text>
+
+    <rect x="40" y="159" width="241" height="257" rx="14" fill="#fff" stroke="#cddce9"/>
+    <circle cx="69" cy="190" r="14" fill="#e8f2f9"/>
+    <text x="69" y="196" text-anchor="middle" font-size="16" font-weight="700" fill="#00629b">1</text>
+    <text x="93" y="197" font-size="20" font-weight="700" fill="#182b49">Hidden state</text>
+    <text x="60" y="237" font-size="17" fill="#50677e">31 attributes per user</text>
+    <g font-size="17" fill="#304e68">
+      <text x="60" y="276">Skills · Knowledge</text>
+      <text x="60" y="306">Episodes · Self-model</text>
+      <text x="60" y="336">Assistance preferences</text>
+    </g>
+    <rect x="60" y="361" width="201" height="34" rx="7" fill="#edf4fa"/>
+    <text x="160" y="383" text-anchor="middle" font-size="15" fill="#00629b">Not given to the assistant</text>
+
+    <path d="M282 271H313" fill="none" stroke="#00629b" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="321" y="159" width="261" height="257" rx="14" fill="#fff" stroke="#cddce9"/>
+    <circle cx="350" cy="190" r="14" fill="#e8f2f9"/>
+    <text x="350" y="196" text-anchor="middle" font-size="16" font-weight="700" fill="#00629b">2</text>
+    <text x="374" y="197" font-size="20" font-weight="700" fill="#182b49">Assist the user</text>
+    <text x="342" y="237" font-size="17" fill="#50677e">31 tasks per user</text>
+    <rect x="342" y="252" width="218" height="44" rx="8" fill="#edf4fa"/>
+    <text x="451" y="280" text-anchor="middle" font-size="18" font-weight="700" fill="#00629b">User simulator</text>
+    <path d="M440 304V323M462 323V304" fill="none" stroke="#00629b" stroke-width="1.8" marker-end="url(#arrow)"/>
+    <rect x="342" y="332" width="218" height="44" rx="8" fill="#182b49"/>
+    <text x="451" y="360" text-anchor="middle" font-size="18" font-weight="700" fill="#fff">Agent + memory</text>
+    <text x="451" y="401" text-anchor="middle" font-size="15" fill="#50677e">Memory persists across tasks</text>
+
+    <path d="M583 354H614" fill="none" stroke="#00629b" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="622" y="159" width="226" height="257" rx="14" fill="#fff" stroke="#cddce9"/>
+    <circle cx="651" cy="190" r="14" fill="#e8f2f9"/>
+    <text x="651" y="196" text-anchor="middle" font-size="16" font-weight="700" fill="#00629b">3</text>
+    <text x="675" y="197" font-size="20" font-weight="700" fill="#182b49">Read memory</text>
+    <text x="642" y="237" font-size="17" fill="#50677e">Read the final artifact</text>
+    <rect x="642" y="261" width="186" height="55" rx="8" fill="#edf4fa"/>
+    <text x="735" y="295" text-anchor="middle" font-size="20" font-weight="700" fill="#00629b">Full store</text>
+    <rect x="642" y="332" width="186" height="55" rx="8" fill="#edf4fa"/>
+    <text x="735" y="366" text-anchor="middle" font-size="20" font-weight="700" fill="#00629b">Top-5 retrieval</text>
+
+    <path d="M849 288H880M849 359H880" fill="none" stroke="#00629b" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="888" y="159" width="272" height="257" rx="14" fill="#182b49"/>
+    <circle cx="917" cy="190" r="14" fill="#31506f"/>
+    <text x="917" y="196" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">4</text>
+    <text x="941" y="197" font-size="20" font-weight="700" fill="#fff">Recover &amp; score</text>
+    <text x="908" y="243" font-size="17" fill="#c2d6e9">Reconstruct user attributes</text>
+    <text x="908" y="274" font-size="18" fill="#c2d6e9">from memory evidence.</text>
+    <path d="M908 297H1140" stroke="#3c5672"/>
+    <text x="908" y="330" font-size="17" fill="#c2d6e9">Compare with hidden state</text>
+    <text x="908" y="365" font-size="24" font-weight="700" fill="#fff">Recovery score</text>
+    <text x="908" y="395" font-size="15" fill="#c2d6e9">Balanced across five categories</text>
+
+    <path d="M160 417V467H1024V423" fill="none" stroke="#57768f" stroke-width="1.7" stroke-dasharray="6 5" marker-end="url(#muted-arrow)"/>
+    <rect x="410" y="452" width="373" height="29" fill="#f3f7fb"/>
+    <text x="596" y="472" text-anchor="middle" font-size="16" fill="#50677e">Hidden ground truth · evaluation only</text>
+
+    <path d="M40 507H1160" stroke="#d5e1ec"/>
+    <g fill="#182b49" text-anchor="middle" font-size="27" font-weight="700">
+      <text x="180" y="550">50</text>
+      <text x="460" y="550">1,550</text>
+      <text x="740" y="550">5</text>
+      <text x="1020" y="550">2</text>
+    </g>
+    <g fill="#50677e" text-anchor="middle" font-size="17">
+      <text x="180" y="580">Synthetic users</text>
+      <text x="460" y="580">Recovery targets</text>
+      <text x="740" y="580">Compared systems</text>
+      <text x="1020" y="580">Memory access modes</text>
+    </g>
+  </g>
+</svg>
