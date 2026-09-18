@@ -98,7 +98,7 @@ def _build_memt_config(traj_dir: str, db_path: str):
         path=db_path,
         from_scratch=True,
     )
-    cfg.data_name = "memprobe"
+    cfg.data_name = "memaudit"
     cfg.traj_dir = traj_dir
     cfg.log_path = os.path.join(traj_dir, "memt.log")
     cfg.USE_LOCAL_LLM = True

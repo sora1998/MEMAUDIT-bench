@@ -49,11 +49,11 @@
     "transform": "cr:transform"
   },
   "@type": "sc:Dataset",
-  "name": "MemProbe",
-  "alternateName": "MemProbe 50-user pooled-final release artifact",
-  "description": "MemProbe is a 50-user release artifact for evaluating long-term agent memory through post-interaction structured user-state recovery. It contains hidden synthetic user memory banks, leak-controlled task prompts, full interaction transcripts, final memory stores, reconstruction judgments, preference judgments, attribution outputs, and analysis/reproduction code for comparing memory-equipped LLM agents. Run identifiers in this artifact follow the form <system>_pooled_50 (dump_all access mode) or <system>_pooled_50_retrieve (top-k retrieve access mode); the system token 'memt_memonly' corresponds to the paper-table label 'memt' (Mem-T variant with use_finish_answer=False, returning only retrieved memories rather than the LLM-authored finish answer).",
+  "name": "MEMAUDIT",
+  "alternateName": "MEMAUDIT 50-user pooled-final release artifact",
+  "description": "MEMAUDIT (formerly MemProbe) is a 50-user release artifact for evaluating long-term agent memory through post-interaction structured user-state recovery. It contains hidden synthetic user memory banks, leak-controlled task prompts, full interaction transcripts, final memory stores, reconstruction judgments, preference judgments, attribution outputs, and analysis/reproduction code for comparing memory-equipped LLM agents. Run identifiers in this artifact follow the form <system>_pooled_50 (dump_all access mode) or <system>_pooled_50_retrieve (top-k retrieve access mode); the system token 'memt_memonly' corresponds to the paper-table label 'memt' (Mem-T variant with use_finish_answer=False, returning only retrieved memories rather than the LLM-authored finish answer).",
   "conformsTo": "http://mlcommons.org/croissant/1.1",
-  "url": "https://github.com/sora1998/MemProbe",
+  "url": "https://github.com/sora1998/MEMAUDIT-bench",
   "version": "0.1.0-pooled-final-50-user",
   "dateCreated": "2026-04-27",
   "datePublished": "2026-05-03",
@@ -83,7 +83,7 @@
   "rai:dataUseCases": "Intended for research on long-term memory in LLM agents: benchmarking memory systems, evaluating post-interaction user-state recovery (reconstruction), comparing dump_all vs retrieve access modes, analyzing failure attributions, and as a reference artifact for reproducing the accompanying paper's tables. Not intended for training production user models, for personalization of real users, or for any downstream task that assumes the synthetic personas reflect real human attributes.",
   "rai:dataSocialImpact": "Low direct social impact. Because the dataset is fully synthetic, risks of re-identification, privacy harm, or representational harm to real individuals are minimal. Indirect risks come from the dataset's role as an evaluation benchmark: over-fitting memory systems to this artifact, or treating its synthetic distribution as a proxy for real user populations, could lead to overstated capability claims. Users should report results alongside the limitations and biases listed above.",
   "rai:hasSyntheticData": true,
-  "citeAs": "@misc{anonymous2026memprobe,\n  title = {MemProbe: Auditing Long-Term Agent Memory via Hidden User-State Recovery},\n  author = {Anonymous Authors},\n  year = {2026},\n  note = {Release artifact: 50-user pooled-final benchmark package}\n}",
+  "citeAs": "@misc{ma2026memprobeprobinglongtermagent,\n  title={MEMPROBE: Probing Long-Term Agent Memory via Hidden User-State Recovery},\n  author={Enze Ma and Yufan Zhou and Wei-Chieh Huang and Jie Yang and Huanhuan Ma and Zixuan Wang and Chengze Li and Chunyu Miao and Philip S. Yu and Zhen Wang},\n  year={2026},\n  eprint={2606.24595},\n  archivePrefix={arXiv},\n  primaryClass={cs.CL},\n  url={https://arxiv.org/abs/2606.24595}\n}\n",
   "isLiveDataset": false,
   "distribution": [
     {
@@ -91,17 +91,17 @@
       "@id": "readme",
       "name": "README",
       "description": "Release description, environment instructions, usage examples, and license/third-party-assets notes.",
-      "contentUrl": "https://raw.githubusercontent.com/sora1998/MemProbe/main/README.md",
+      "contentUrl": "https://raw.githubusercontent.com/sora1998/MEMAUDIT-bench/main/README.md",
       "encodingFormat": "text/markdown",
-      "contentSize": "10513 B",
-      "sha256": "693dbd1d0b3436227c86846323e71aecc892582ab7f3182ef3f799453754042c"
+      "contentSize": "11188 B",
+      "sha256": "c0bf44037a87942126d54aeffbc1dba2d610665d33e86378f98f510b654a9c85"
     },
     {
       "@type": "cr:FileObject",
       "@id": "requirements",
       "name": "requirements.txt",
       "description": "Full pip freeze export of the build environment.",
-      "contentUrl": "https://raw.githubusercontent.com/sora1998/MemProbe/main/requirements.txt",
+      "contentUrl": "https://raw.githubusercontent.com/sora1998/MEMAUDIT-bench/main/requirements.txt",
       "encodingFormat": "text/plain",
       "contentSize": "5520 B",
       "sha256": "94c210d76897b8c9aa44f000d534d89deb494199dc9698cf48fd5dd8141500a7"
@@ -111,7 +111,7 @@
       "@id": "environment",
       "name": "environment.yml",
       "description": "Conda environment export of the build environment, with local prefix removed.",
-      "contentUrl": "https://raw.githubusercontent.com/sora1998/MemProbe/main/environment.yml",
+      "contentUrl": "https://raw.githubusercontent.com/sora1998/MEMAUDIT-bench/main/environment.yml",
       "encodingFormat": "application/x-yaml",
       "contentSize": "8128 B",
       "sha256": "a558f36118ed0fe0dd402b946d778445000b3c489bc964c2dbd3ed29fcc67e1d"
@@ -121,7 +121,7 @@
       "@id": "user_memory_banks",
       "name": "user_memory_banks_pooled_final.json",
       "description": "Hidden structured memory banks for 50 synthetic users.",
-      "contentUrl": "https://raw.githubusercontent.com/sora1998/MemProbe/main/Deeppersona/data/user_memory_banks_pooled_final.json",
+      "contentUrl": "https://raw.githubusercontent.com/sora1998/MEMAUDIT-bench/main/Deeppersona/data/user_memory_banks_pooled_final.json",
       "encodingFormat": "application/json",
       "contentSize": "900580 B",
       "sha256": "7731d47767ec1f9e8d725e750540dfa8d8557fb9687fff3666436ef3573bf3e4"
@@ -131,7 +131,7 @@
       "@id": "dimension_pool",
       "name": "dimension_pool.json",
       "description": "Taxonomy-anchored dimension pool used for hidden bank generation.",
-      "contentUrl": "https://raw.githubusercontent.com/sora1998/MemProbe/main/Deeppersona/data/dimension_pool.json",
+      "contentUrl": "https://raw.githubusercontent.com/sora1998/MEMAUDIT-bench/main/Deeppersona/data/dimension_pool.json",
       "encodingFormat": "application/json",
       "contentSize": "41526 B",
       "sha256": "f1ece9d3c2c9155f62c544549674e3b3c9931f868b67eb207a2db92b16f804c8"

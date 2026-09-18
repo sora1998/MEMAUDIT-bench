@@ -1,9 +1,11 @@
-# MemProbe
+# MEMAUDIT
 
-Release artifact package for **MemProbe**, a benchmark for auditing long-term agent memory via hidden user-state recovery.The benchmark asks: after an assistant interacts with a simulated user across ordinary assistance tasks, what hidden user state can be reconstructed from the memory artifact the assistant leaves behind? This repository contains the 50-user release artifacts and the code needed to
+Release artifact package for **MEMAUDIT** (formerly **MemProbe**), a benchmark for auditing long-term agent memory via hidden user-state recovery. The benchmark asks: after an assistant interacts with a simulated user across ordinary assistance tasks, what hidden user state can be reconstructed from the memory artifact the assistant leaves behind? This repository contains the 50-user release artifacts and the code needed to
 inspect, score, and rerun the benchmark.
 
 ## Paper
+
+The accompanying paper was released under the original name **MEMPROBE**.
 
 **MEMPROBE: Probing Long-Term Agent Memory via Hidden User-State Recovery**
 
@@ -91,8 +93,8 @@ from the same environment with the machine-local `prefix` line removed.
 ## Install Environment
 
 ```bash
-conda create -n memprobe python=3.10
-conda activate memprobe
+conda create -n memaudit python=3.10
+conda activate memaudit
 python -m pip install --upgrade pip setuptools wheel
 python -m pip install -r requirements.txt
 ```
@@ -338,7 +340,7 @@ study.
 
 License and terms-of-use notes:
 
-- Top-level MemProbe code and generated benchmark artifacts are released
+- Top-level MEMAUDIT code and generated benchmark artifacts are released
   under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); see the
   top-level `LICENSE` file. This README does not override any third-party
   license or service term.

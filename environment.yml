@@ -1,4 +1,4 @@
-name: memprobe
+name: memaudit
 channels:
   - defaults
 dependencies:
