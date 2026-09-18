@@ -1,7 +1,7 @@
 cff-version: 1.2.0
-message: "If you use MEMAUDIT, please cite the accompanying paper below."
+message: "If you use MemAudit, please cite the accompanying paper below."
 type: software
-title: "MEMAUDIT: Auditing Long-Term Agent Memory via Hidden User-State Recovery"
+title: "MemAudit: Auditing Long-Term Agent Memory via Hidden User-State Recovery"
 repository-code: "https://github.com/sora1998/MEMAUDIT-bench"
 url: "https://github.com/sora1998/MEMAUDIT-bench"
 license: CC-BY-4.0

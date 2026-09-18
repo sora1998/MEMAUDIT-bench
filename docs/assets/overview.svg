@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
-  <title id="title">MEMAUDIT benchmark overview</title>
+  <title id="title">MemAudit benchmark overview</title>
   <desc id="desc">A hidden bank of synthetic user attributes guides a user simulator. An agent assists the simulator across 31 tasks and retains memory. An evaluator reconstructs user attributes using either the full store or top-5 retrieval and compares them with the hidden bank. The assistant never receives the hidden bank directly.</desc>
   <defs>
     <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0L8 4L0 8" fill="none" stroke="#00629b" stroke-width="1.8"/></marker>
@@ -7,7 +7,7 @@
   </defs>
   <rect width="1200" height="620" rx="22" fill="#f3f7fb"/>
   <g font-family="Arial, Helvetica, sans-serif">
-    <text x="40" y="47" font-size="17" font-weight="700" letter-spacing="2.5" fill="#00629b">MEMAUDIT</text>
+    <text x="40" y="47" font-size="17" font-weight="700" letter-spacing="2.5" fill="#00629b">MemAudit</text>
     <text x="40" y="89" font-size="31" font-weight="700" fill="#182b49">From useful assistance to recoverable memory.</text>
     <text x="40" y="119" font-size="18" fill="#50677e">Audit what the agent retains after the conversation ends.</text>
 

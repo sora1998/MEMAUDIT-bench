@@ -1,4 +1,4 @@
-<h1 align="center">MEMAUDIT</h1>
+<h1 align="center">MemAudit</h1>
 <h3 align="center">What do agents remember about their users?</h3>
 <p align="center">Auditing long-term agent memory through hidden user-state recovery.</p>
 
@@ -19,12 +19,12 @@
 
 ## Overview
 
-**Completing a task does not tell us what an agent remembers.** MEMAUDIT evaluates the memory left behind after an agent assists a user across a sequence of everyday tasks. We reconstruct the user's hidden attributes from that memory and compare them with synthetic ground truth.
+**Completing a task does not tell us what an agent remembers.** MemAudit evaluates the memory left behind after an agent assists a user across a sequence of everyday tasks. We reconstruct the user's hidden attributes from that memory and compare them with synthetic ground truth.
 
 The benchmark separates two questions: **what information is stored**, and **what information can be retrieved**. It evaluates both full-store access and top-5 retrieval, alongside task completion and preference alignment.
 
 <p align="center">
-  <img src="docs/assets/overview.svg" alt="MEMAUDIT pipeline: hidden synthetic user state guides the simulator; an agent assists the user across tasks and builds memory; an evaluator recovers user attributes through full-store access or top-5 retrieval and compares them with ground truth." width="100%">
+  <img src="docs/assets/overview.svg" alt="MemAudit pipeline: hidden synthetic user state guides the simulator; an agent assists the user across tasks and builds memory; an evaluator recovers user attributes through full-store access or top-5 retrieval and compares them with ground truth." width="100%">
 </p>
 
 | Users | Hidden state | Assistance tasks | Compared systems | Memory access |
@@ -137,6 +137,6 @@ Citation metadata is also available in [CITATION.cff](CITATION.cff).
 
 ## License and acknowledgments
 
-MEMAUDIT's top-level code and generated benchmark artifacts are released under [CC BY 4.0](LICENSE). The benchmark builds on DeepPersona, O*NET, and the compared memory systems. Vendored A-Mem code retains its [MIT license](A-mem-sys/LICENSE); Mem-T retains its [Apache 2.0 license](Mem-T/LICENSE). Model weights are not included.
+MemAudit's top-level code and generated benchmark artifacts are released under [CC BY 4.0](LICENSE). The benchmark builds on DeepPersona, O*NET, and the compared memory systems. Vendored A-Mem code retains its [MIT license](A-mem-sys/LICENSE); Mem-T retains its [Apache 2.0 license](Mem-T/LICENSE). Model weights are not included.
 
 See [data provenance, limitations, and third-party terms](docs/data.md#provenance-and-licenses) for details.

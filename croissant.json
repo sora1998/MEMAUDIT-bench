@@ -49,9 +49,9 @@
     "transform": "cr:transform"
   },
   "@type": "sc:Dataset",
-  "name": "MEMAUDIT",
-  "alternateName": "MEMAUDIT 50-user pooled-final release artifact",
-  "description": "MEMAUDIT is a 50-user release artifact for evaluating long-term agent memory through post-interaction structured user-state recovery. It contains hidden synthetic user memory banks, leak-controlled task prompts, full interaction transcripts, final memory stores, reconstruction judgments, preference judgments, attribution outputs, and analysis/reproduction code for comparing memory-equipped LLM agents. Run identifiers in this artifact follow the form <system>_pooled_50 (dump_all access mode) or <system>_pooled_50_retrieve (top-k retrieve access mode); the system token 'memt_memonly' corresponds to the paper-table label 'memt' (Mem-T variant with use_finish_answer=False, returning only retrieved memories rather than the LLM-authored finish answer).",
+  "name": "MemAudit",
+  "alternateName": "MemAudit 50-user pooled-final release artifact",
+  "description": "MemAudit is a 50-user release artifact for evaluating long-term agent memory through post-interaction structured user-state recovery. It contains hidden synthetic user memory banks, leak-controlled task prompts, full interaction transcripts, final memory stores, reconstruction judgments, preference judgments, attribution outputs, and analysis/reproduction code for comparing memory-equipped LLM agents. Run identifiers in this artifact follow the form <system>_pooled_50 (dump_all access mode) or <system>_pooled_50_retrieve (top-k retrieve access mode); the system token 'memt_memonly' corresponds to the paper-table label 'memt' (Mem-T variant with use_finish_answer=False, returning only retrieved memories rather than the LLM-authored finish answer).",
   "conformsTo": "http://mlcommons.org/croissant/1.1",
   "url": "https://github.com/sora1998/MEMAUDIT-bench",
   "version": "0.1.0-pooled-final-50-user",
@@ -126,7 +126,7 @@
       "contentUrl": "https://raw.githubusercontent.com/sora1998/MEMAUDIT-bench/main/README.md",
       "encodingFormat": "text/markdown",
       "contentSize": "8424 B",
-      "sha256": "1e477fe5a214fcd67eca65f946dc3ee849ef0658306f5b44e5c38e95a826f636"
+      "sha256": "71d58a4cfc9c2c1103b220049709aea288e40cf16f8068c6015799b4fff080d1"
     },
     {
       "@type": "cr:FileObject",

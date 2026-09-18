@@ -2,7 +2,7 @@
 
 [Project overview](../README.md) · [Reproduction guide](../docs/reproduction.md)
 
-MEMAUDIT releases the synthetic **50-user pooled-final benchmark** and the
+MemAudit releases the synthetic **50-user pooled-final benchmark** and the
 artifacts needed to trace each result back to a conversation and memory record.
 See the [project overview](../README.md) for the paper and citation.
 
@@ -193,7 +193,7 @@ resources including DeepPersona and O*NET. The pool selection is recorded in the
 bank's `source` field. Inspect the generation utilities and paper for the
 construction procedure.
 
-The repository's top-level [LICENSE](../LICENSE) releases MEMAUDIT code and
+The repository's top-level [LICENSE](../LICENSE) releases MemAudit code and
 generated benchmark artifacts under **CC BY 4.0**. Vendored A-Mem code retains
 its [MIT License](../A-mem-sys/LICENSE); vendored Mem-T code retains its
 [Apache License 2.0](../Mem-T/LICENSE). DeepPersona, O*NET, Mem0, OpenAI/API

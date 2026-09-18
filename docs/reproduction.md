@@ -1,4 +1,4 @@
-# Reproducing MEMAUDIT
+# Reproducing MemAudit
 
 [Project overview](../README.md) · [Data and artifact reference](../docs/data.md)
 
