@@ -32,7 +32,8 @@
     <text x="342" y="237" font-size="17" fill="#50677e">31 tasks per user</text>
     <rect x="342" y="252" width="218" height="44" rx="8" fill="#edf4fa"/>
     <text x="451" y="280" text-anchor="middle" font-size="18" font-weight="700" fill="#00629b">User simulator</text>
-    <path d="M440 304V323M462 323V304" fill="none" stroke="#00629b" stroke-width="1.8" marker-end="url(#arrow)"/>
+    <path d="M440 304V323" fill="none" stroke="#00629b" stroke-width="1.8" marker-end="url(#arrow)"/>
+    <path d="M462 323V304" fill="none" stroke="#00629b" stroke-width="1.8" marker-end="url(#arrow)"/>
     <rect x="342" y="332" width="218" height="44" rx="8" fill="#182b49"/>
     <text x="451" y="360" text-anchor="middle" font-size="18" font-weight="700" fill="#fff">Agent + memory</text>
     <text x="451" y="401" text-anchor="middle" font-size="15" fill="#50677e">Memory persists across tasks</text>
@@ -48,7 +49,8 @@
     <rect x="642" y="332" width="186" height="55" rx="8" fill="#edf4fa"/>
     <text x="735" y="366" text-anchor="middle" font-size="20" font-weight="700" fill="#00629b">Top-5 retrieval</text>
 
-    <path d="M849 288H880M849 359H880" fill="none" stroke="#00629b" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M849 288H880" fill="none" stroke="#00629b" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M849 359H880" fill="none" stroke="#00629b" stroke-width="2" marker-end="url(#arrow)"/>
     <rect x="888" y="159" width="272" height="257" rx="14" fill="#182b49"/>
     <circle cx="917" cy="190" r="14" fill="#31506f"/>
     <text x="917" y="196" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">4</text>
