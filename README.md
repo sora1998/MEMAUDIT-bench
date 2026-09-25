@@ -33,6 +33,19 @@ The benchmark separates two questions: **what information is stored**, and **wha
 
 The five hidden-state categories are **skills, knowledge, episodes, self-model, and assistance preferences**. Hidden banks guide the simulator and evaluator; they are not supplied directly to the assistant. See [data and evaluation protocol](docs/data.md).
 
+## Versions
+
+Improve user simulator.
+
+| Branch | Simulator | Use |
+| :-- | :-- | :-- |
+| [`main`](https://github.com/sora1998/MEMAUDIT-bench/tree/main) | `v2` (default) | Current version |
+| [`paper-v1`](https://github.com/sora1998/MEMAUDIT-bench/tree/paper-v1) | Original | Paper reproduction |
+
+The published results below use `paper-v1`. On `main`, select either prompt with
+`--simulator-version v2` or `--simulator-version paper-v1`.
+See [version usage](docs/simulator-versions.md).
+
 ## Released results
 
 Task completion nearly saturates even without memory, while memory recovery remains limited. For A-Mem, long context, and Mem0, recovery drops further when the evaluator relies on retrieval.
@@ -86,9 +99,10 @@ To generate a new trajectory, first follow the [environment setup](docs/reproduc
 
 ```bash
 python runner.py \
+  --simulator-version v2 \
   --tasks-dir CustomTasksPooledFinal \
   --agent nomem \
-  --run-id smoke_nomem_pooled_50 \
+  --run-id smoke_nomem_v2_pooled_50 \
   --users user_001 \
   --scoring-modes dump_all
 ```
@@ -101,6 +115,7 @@ For the five-system, 50-user evaluation, Mem-T setup, attribution, and task gene
 MEMAUDIT-bench/
 ├── runner.py                  # Run assistance trajectories and evaluation
 ├── simulation.py              # User simulator and agent registry
+├── simulator_prompts.py       # Versioned simulator prompts
 ├── scorer.py                  # Memory recovery and auxiliary metrics
 ├── failure_attribution.py     # Analyze low-recovery cases
 ├── agents/                    # Adapters for the compared memory systems

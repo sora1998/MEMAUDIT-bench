@@ -6,6 +6,10 @@ The release supports two workflows: inspect the saved evidence locally, or rerun
 the interactions and evaluation with model access. All commands below run from
 the repository root.
 
+The commands below use the paper prompt explicitly on `main`. The original
+code is preserved on the [`paper-v1` branch](https://github.com/sora1998/MEMAUDIT-bench/tree/paper-v1).
+For the current simulator, see [version usage](simulator-versions.md).
+
 ## 1. Inspect the release without model calls
 
 ```bash
@@ -107,6 +111,7 @@ assistant turns per task, followed by reconstruction scoring:
 
 ```bash
 python runner.py \
+  --simulator-version paper-v1 \
   --tasks-dir CustomTasksPooledFinal \
   --agent nomem \
   --run-id smoke_nomem_pooled_50 \
@@ -126,8 +131,9 @@ The smoke test writes `history/smoke_nomem_pooled_50/`,
 `output/smoke_nomem_pooled_50/`. API token logs go to
 `usage/smoke_nomem_pooled_50_*.txt`; `usage/` is ignored by Git.
 
-Use a fresh `--run-id` for each experiment. Reusing an ID can overwrite per-user
-artifacts; the runner does not provide a resume flag. The `pooled_50` substring in
+Use a fresh `--run-id` for each experiment. The released run IDs are reserved on
+`main`; other reused IDs can overwrite per-user artifacts. The runner does not
+provide a resume flag. The `pooled_50` substring in
 this smoke ID enables the attribution script to find the correct task pool; it
 does not determine how many users are run.
 
@@ -143,6 +149,7 @@ Run the no-memory baseline with dump-all scoring:
 
 ```bash
 python runner.py \
+  --simulator-version paper-v1 \
   --tasks-dir CustomTasksPooledFinal \
   --agent nomem \
   --run-id nomem_pooled_50_rerun \
@@ -156,6 +163,7 @@ interaction run, then evaluates both reconstruction modes on that run:
 ```bash
 for AGENT in amem longctx_full mem0; do
   python runner.py \
+    --simulator-version paper-v1 \
     --tasks-dir CustomTasksPooledFinal \
     --agent "$AGENT" \
     --run-id "${AGENT}_pooled_50_rerun" \
@@ -168,6 +176,7 @@ After starting the Mem-T server, run the wrapper used in the paper:
 
 ```bash
 python runner.py \
+  --simulator-version paper-v1 \
   --tasks-dir CustomTasksPooledFinal \
   --agent memt_memonly \
   --run-id memt_memonly_pooled_50_rerun \
