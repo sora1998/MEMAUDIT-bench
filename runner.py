@@ -13,17 +13,9 @@ import time
 from typing import Dict, List, Optional, Tuple
 
 from simulation import Episode, load_user, make_agent
-from simulator_prompts import (
-    DEFAULT_SIMULATOR_VERSION, SIMULATOR_PROMPTS, simulator_prompt_metadata,
-)
 from scorer import UserScorer, BenchmarkScorer, UserScore, BenchmarkReport
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
-_RELEASE_RUN_IDS = {
-    "nomem_pooled_50", "amem_pooled_50", "longctx_full_pooled_50",
-    "mem0_pooled_50", "memt_memonly_pooled_50",
-}
-_RELEASE_RUN_IDS |= {rid + "_retrieve" for rid in _RELEASE_RUN_IDS}
 
 
 class BenchmarkRunner:
@@ -50,10 +42,7 @@ class BenchmarkRunner:
         run_id: Optional[str] = None,
         agent_kwargs: Optional[Dict] = None,
         scoring_modes: Optional[List[str]] = None,
-        simulator_version: str = DEFAULT_SIMULATOR_VERSION,
     ):
-        self.simulator_config = simulator_prompt_metadata(simulator_version)
-        self.simulator_version = simulator_version
         if tasks is None and tasks_per_user is None:
             raise ValueError("Must provide either `tasks` (shared) or `tasks_per_user` (per-user).")
         scoring_modes = scoring_modes or ["dump_all"]
@@ -79,9 +68,7 @@ class BenchmarkRunner:
         # Episode artefacts (memory/history/pref_judge) are mode-independent
         # and therefore always live under the dump_all run_id; only the
         # scoring outputs split per mode.
-        rid = run_id or ("default" if simulator_version == "paper-v1" else "default_v2")
-        if os.path.normpath(rid) in _RELEASE_RUN_IDS:
-            raise ValueError("Use a fresh run ID; released paper artifacts cannot be overwritten.")
+        rid = run_id or "default"
         self._rid            = rid
         self.memory_dir      = os.path.join(memory_dir, rid)
         self.history_dir     = os.path.join("history", rid)
@@ -106,8 +93,6 @@ class BenchmarkRunner:
         scoring mode using the same in-memory agent state. Returns a dict
         {scoring_mode: BenchmarkReport}.
         """
-        print(f"[runner] simulator={self.simulator_version} "
-              f"sha256={self.simulator_config['sha256']}")
         # One scorer per requested mode so each mode writes its recon_judge
         # files into its own output subtree.
         user_scorers = {
@@ -138,7 +123,6 @@ class BenchmarkRunner:
                     dataset_type=self.dataset_type,
                     max_turns=self.max_turns,
                     pref_threshold=self.pref_threshold,
-                    simulator_version=self.simulator_version,
                 )
                 result = episode.run(agent)
 
@@ -222,9 +206,6 @@ if __name__ == "__main__":
                    help="suffix for all output dirs (memory/history/pref_judge/output) to avoid collisions")
     p.add_argument("--bank", default=None,
                    help="override path to the user-memory bank (default: Deeppersona/data/user_memory_banks_pooled_final.json)")
-    p.add_argument("--simulator-version", choices=list(SIMULATOR_PROMPTS),
-                   default=DEFAULT_SIMULATOR_VERSION,
-                   help="user simulator: v2 (default) or paper-v1 for the published protocol")
     p.add_argument("--agent", default="amem",
                    help="memory system to evaluate (e.g. amem, nomem)")
     p.add_argument("--scoring-modes", nargs="+", default=["dump_all"],
@@ -265,7 +246,6 @@ if __name__ == "__main__":
         agent_name=args.agent,
         dataset_type="personamem",   # no-GT dataset; Task Fit falls back to `satisfied`
         max_turns=25,
-        simulator_version=args.simulator_version,
         pref_threshold=4,
         run_id=args.run_id,
         scoring_modes=args.scoring_modes,

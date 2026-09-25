@@ -2,9 +2,6 @@
 
 This page summarizes the archived 50-user release. Each number below is read
 from the released aggregate reports and checked against their per-user records.
-These results use the simulator preserved on the
-[`paper-v1` branch](https://github.com/sora1998/MEMAUDIT-bench/tree/paper-v1);
-they are not measurements of the updated simulator on `main`.
 
 ## Results at a glance
 

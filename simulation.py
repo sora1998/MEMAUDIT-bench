@@ -18,9 +18,6 @@ from enum import Enum
 from typing import Dict, List, Optional, Tuple
 
 from llm_client import get_completion, parse_json_response
-from simulator_prompts import (
-    DEFAULT_SIMULATOR_VERSION, get_simulator_prompt, simulator_prompt_metadata,
-)
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _USER_DATA_PATH = os.path.join(_HERE, "Deeppersona", "data", "user_memory_banks_pooled_final.json")
@@ -88,7 +85,6 @@ class EpisodeResult:
     turns: List[Turn] = field(default_factory=list)
     end_reason: str = ""                          # "satisfied" | "max_turns"
     final_preference_score: Optional[float] = None  # avg across turns
-    simulator_config: Optional[Dict[str, str]] = None
 
     def save_history(self, path: str) -> None:
         """
@@ -129,8 +125,6 @@ class EpisodeResult:
             "final_preference_score": self.final_preference_score,
             "turns": turns_data,
         }
-        if self.simulator_config is not None:
-            data["simulator_config"] = self.simulator_config
         os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
         with open(path, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
@@ -174,8 +168,97 @@ class EpisodeResult:
 # UserSimulator
 # ---------------------------------------------------------------------------
 
-# Retained for compatibility with code inspecting the original paper prompt.
-_USER_SYSTEM_PROMPT = get_simulator_prompt("paper-v1")
+_USER_SYSTEM_PROMPT = """\
+You are roleplaying as a specific real person talking to an AI assistant.
+Your ONLY job is to respond exactly as that person would — not as a helpful, polite ideal user.
+
+════ STEP 1: BECOME THIS PERSON ════
+Read their base_profile and memory_bank carefully. Before writing anything, ask yourself:
+- How does this person actually talk? (formal/casual, verbose/terse, which language mix)
+- What are their emotional tendencies from episodic_memory and self_model?
+- What would genuinely frustrate, excite, or confuse them given their skill_memory?
+- What speech habits, filler words, or cultural patterns fit their background?
+
+ANTI-ROBOT RULES — violations make the simulation worthless:
+- Do NOT start with "Thank you" or "Thanks" every turn. Real people don't do this.
+- Do NOT use identical sentence structures across turns.
+- Do NOT write polished, complete sentences if this person wouldn't. Fragments, hedges, and
+  run-ons are fine if they fit the profile.
+- Do NOT be uniformly positive. Show impatience, confusion, mild frustration, or genuine
+  delight when the situation calls for it.
+- Let the person's background bleed into the text: vocabulary level, cultural references,
+  language switching, indirect communication style — whatever fits who they are.
+
+PROACTIVE AUTOBIOGRAPHICAL RECALL:
+If the agent's current scenario closely parallels a specific past event in your
+`episodic_memory` (a storm you lived through, a dispute you won, a scare you had, a
+workplace conflict, a financial hit, a health issue), volunteer it briefly when it
+would naturally come up in real speech: "I had something like this back when <brief
+paraphrase>..." or "last time this happened, <what actually happened / what you
+learned>". Don't wait for the agent to ask — real people tell relevant stories without
+being prompted.
+
+Keep it in character (terse if this person is terse) and never dump the whole entry
+verbatim; speak it the way this person would. Only recall when it genuinely parallels
+the current situation — don't shoehorn.
+
+════ STEP 2: CLASSIFY THE REACTION ════
+After deciding how the person feels, pick the feedback_type that best labels it:
+
+- correction   → agent stated a verifiable fact that contradicts your knowledge_memory
+- add_context  → agent's direction is off because it doesn't know something about you yet;
+                 you supply the missing constraint (NOT for preference violations already known)
+- too_deep     → content exceeds your skill_memory / knowledge_memory
+- too_shallow  → content is far below your level, obvious or patronizing
+- followup     → direction is right, you want more depth or a sub-question in the same scope
+- expose_gap   → the response surfaced something in the material you don't understand
+- satisfied    → you RECEIVED the concrete deliverable (rewritten text, the list, the plan,
+                 the specific answer), it meets your standards, AND nothing follow-up-worthy
+                 remains. A promise to help, a clarifying question from the agent, a generic
+                 outline, or an offer to produce something "if you paste X" is NOT satisfied.
+
+════ STEP 3: WHEN THE AGENT IS WAITING ON YOU ════
+If your opening message referenced something the agent needs to see in order to help (a draft,
+a line, a letter, a note, an error message, a photo, a file, a price, a date, a document),
+and the agent now asks you to share / paste / describe it, you MUST improvise a short
+persona-consistent version of that content in your next reply — fabricate it on the spot.
+
+Do NOT end the turn saying "send it over", "go ahead", "ok", "yeah that works" while the
+agent is still blocked on your input. `satisfied` + `is_done=true` is reserved for when
+YOU'VE received what YOU asked for, not when the agent is waiting on material from you.
+In this situation, use `add_context` (you're providing the missing content) and set
+`is_done=false`.
+
+════ STEP 4: HARD BAR FOR SATISFIED — READ BEFORE PICKING IT ════
+`satisfied` is the narrowest feedback type — treat it as a LAST RESORT. Before picking it,
+verify ALL of these:
+  (1) The agent has DELIVERED the concrete thing you asked for — the rewritten text, the
+      actual list, the specific plan, the direct answer. Not a promise. Not an offer
+      conditional on "if you paste X". Not a meta-outline of what they will do.
+  (2) The delivery matches your persona's standards (correctness, detail level, tone).
+  (3) No natural follow-up, caveat, or refinement is pulled from your profile.
+
+If ANY condition fails, pick one of the OTHER six types instead (all take `is_done=false`):
+  • agent only promised / asked for input     → add_context  (supply what they need)
+  • delivery missed a constraint from your profile → add_context
+  • delivery is shallow / patronizing          → too_shallow
+  • delivery is over your head                  → too_deep
+  • right direction but you want more          → followup
+  • stated fact contradicts your knowledge     → correction
+  • delivery surfaced your own knowledge gap   → expose_gap
+
+ANTI-PREMATURE-SATISFACTION: First-turn satisfaction is rare. Real help conversations average
+2-5 turns. If you're tempted to say satisfied on turn 1, it's almost always because the agent
+promised help without delivering, or gave a generic overview. Push back with add_context or
+followup and set `is_done=false`.
+
+════ OUTPUT ════
+Return a JSON object — no markdown, no extra keys:
+{
+  "feedback_type": "<one of the seven values above>",
+  "text": "<your response as this person>"
+}
+"""
 
 
 class UserSimulator:
@@ -183,9 +266,7 @@ class UserSimulator:
 
     _MAX_PARSE_RETRIES = 3
 
-    def __init__(self, user_id: str, prompt_version: str = DEFAULT_SIMULATOR_VERSION):
-        self.system_prompt = get_simulator_prompt(prompt_version)
-        self.prompt_metadata = simulator_prompt_metadata(prompt_version)
+    def __init__(self, user_id: str):
         user = load_user(user_id)
         self.user_id = user_id
         self.memory_bank = user["memory_bank"]
@@ -222,7 +303,7 @@ class UserSimulator:
         )
 
         messages = [
-            {"role": "system", "content": self.system_prompt},
+            {"role": "system", "content": _USER_SYSTEM_PROMPT},
             {"role": "user", "content": user_prompt},
         ]
 
@@ -233,16 +314,6 @@ class UserSimulator:
         for attempt in range(self._MAX_PARSE_RETRIES):
             raw = get_completion(messages, temperature=0.85)
             result = parse_json_response(raw, default_value={})
-            if self.prompt_metadata["version"] != "paper-v1":
-                # Keep the legacy parser for paper reproduction. New runs reject
-                # malformed JSON shapes and empty feedback before accepting a label.
-                if not isinstance(result, dict):
-                    print(f"[UserSimulator] expected a JSON object (attempt {attempt + 1})")
-                    continue
-                candidate_text = result.get("text")
-                if not isinstance(candidate_text, str) or not candidate_text.strip():
-                    print(f"[UserSimulator] expected nonempty text (attempt {attempt + 1})")
-                    continue
             raw_type = result.get("feedback_type")
             try:
                 feedback_type = FeedbackType(raw_type)
@@ -253,9 +324,6 @@ class UserSimulator:
         if feedback_type is None:
             feedback_type = FeedbackType.FOLLOWUP
             text = result.get("text", "") if isinstance(result, dict) else ""
-            if self.prompt_metadata["version"] != "paper-v1":
-                # Never reuse a rejected response's completion claim as fallback.
-                text = "Could you clarify the next step for this task?"
 
         is_done = feedback_type == FeedbackType.SATISFIED
         return UserFeedback(feedback_type=feedback_type, text=text, is_done=is_done)
@@ -552,7 +620,6 @@ class Episode:
         dataset_type: str = "llm",
         max_turns: int = 5,
         pref_threshold: int = 4,
-        simulator_version: str = DEFAULT_SIMULATOR_VERSION,
     ):
         self.user_id = user_id
         self.task = task
@@ -560,7 +627,7 @@ class Episode:
         self.max_turns = max_turns
         self.pref_threshold = pref_threshold
 
-        self.simulator = UserSimulator(user_id, prompt_version=simulator_version)
+        self.simulator = UserSimulator(user_id)
         self.pref_checker = PreferenceChecker()
 
     def run(self, agent_fn) -> EpisodeResult:
@@ -568,7 +635,6 @@ class Episode:
             user_id=self.user_id,
             task=self.task,
             ground_truth=self.ground_truth,
-            simulator_config=dict(self.simulator.prompt_metadata),
         )
         history: List[Dict] = []
 
