@@ -4,12 +4,13 @@
 
 The release supports two workflows: inspect the saved evidence locally, or rerun
 the interactions and evaluation with model access. All commands below run from
-the repository root.
+the repository root. Clone `paper-v1` below to use the original paper code;
+`main` contains the updated simulator.
 
 ## 1. Inspect the release without model calls
 
 ```bash
-git clone https://github.com/sora1998/MEMAUDIT-bench.git
+git clone --branch paper-v1 https://github.com/sora1998/MEMAUDIT-bench.git
 cd MEMAUDIT-bench
 ```
 

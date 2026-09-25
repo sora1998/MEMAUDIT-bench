@@ -125,8 +125,8 @@
       "description": "Release description, environment instructions, usage examples, and license/third-party-assets notes.",
       "contentUrl": "https://raw.githubusercontent.com/sora1998/MEMAUDIT-bench/main/README.md",
       "encodingFormat": "text/markdown",
-      "contentSize": "8424 B",
-      "sha256": "71d58a4cfc9c2c1103b220049709aea288e40cf16f8068c6015799b4fff080d1"
+      "contentSize": "8595 B",
+      "sha256": "6767e263b40af17c9b7a8466d50ae20fcd4a087996302e692f9763ecca355d53"
     },
     {
       "@type": "cr:FileObject",

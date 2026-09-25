@@ -33,6 +33,10 @@ The benchmark separates two questions: **what information is stored**, and **wha
 
 The five hidden-state categories are **skills, knowledge, episodes, self-model, and assistance preferences**. Hidden banks guide the simulator and evaluator; they are not supplied directly to the assistant. See [data and evaluation protocol](docs/data.md).
 
+Improve user simulator.
+The original paper code and published results are preserved on the
+[`paper-v1` branch](https://github.com/sora1998/MEMAUDIT-bench/tree/paper-v1).
+
 ## Released results
 
 Task completion nearly saturates even without memory, while memory recovery remains limited. For A-Mem, long context, and Mem0, recovery drops further when the evaluator relies on retrieval.
